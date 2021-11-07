@@ -42,26 +42,40 @@ self.addEventListener('activate', function (event) {
 });
 
 // Intercept fetch requests and store them in the cache
-self.addEventListener('fetch', function (event) {
+// self.addEventListener('fetch', function (event) {
   /**
    * TODO - Part 2 Step 4
    * Create a function as outlined above
-   */
+  */
+self.addEventListener("fetch", function (event) {
+console.log(event.request.url);
+event.respondWith(
+  caches.open(CACHE_NAME).then(function (cache){
+    return cache.match(event.request).then(function (response) {
+      // return if exists, add if DNE
+      return resposne || fetch(event.request).then(function (response) {
+        cache.put(event.request, response.clone());
+        return response;
+      })
+    })
+  })
+);
+});
   //  event.respondWith(async function() {
   //    const response = await caches.match(event.request);
   //    if (response) {
   //      return response;
   //    }
   //    return fetch(event.request);
-    caches.match(event.request)
-      // .then(console.log("fetch request:" + event.request + " intercepted"))
-      .then(function(response) {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      });
+    // caches.match(event.request)
+    //   // .then(console.log("fetch request:" + event.request + " intercepted"))
+    //   .then(function(response) {
+    //     // Cache hit - return response
+    //     if (response) {
+    //       return response;
+    //     }
+    //     return fetch(event.request);
+    //   });
     // event.respondWith(caches.match(event.request).then(function(response) {
     //   if (response !== undefined) {
     //     return response ;
@@ -72,5 +86,6 @@ self.addEventListener('fetch', function (event) {
     //     })
     //   }
     // }))
-  });
+
+  // });
 // });
