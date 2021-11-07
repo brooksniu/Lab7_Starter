@@ -38,6 +38,8 @@ export class Router {
      * router instance using the 'this' keyword. Substitute 'home' for the variable
      * page
      */
+    this[page] = pageFunc;
+    // console.log(this);
   }
 
   /**
@@ -49,6 +51,7 @@ export class Router {
    */
   navigate(page, statePopped) {
     console.log(`navigate() function called, requested page: ${page}`);
+    // console.log(this);
     /**
      * TODO - Part 1 - Step 4
      * Now, we are going to call the functions that we stored earlier based on 
@@ -65,5 +68,29 @@ export class Router {
      *     and URL + hash to history
      *  4. Finally, call the stored function for the given page
      */
+    // check if function exists
+    if (this[page] == undefined) {
+      // console.log("page DNE");
+      return;
+    }
+    let hash;
+    let link;
+    if (page == "home") {
+      hash = "";
+      link = window.location.origin;
+    }
+    else {
+      hash = "#" + page;
+      link = window.location.href + hash;
+    }
+    // console.log(window.location.hash);
+    // console.log(statePopped);
+    if (statePopped != false && window.location.hash != hash) {
+      // console.log("pushed");
+      window.history.pushState({"curr_page": page}, "", link);
+      // console.log(link);
+    }
+    this[page]();
+    // console.log(document.querySelector("recipe-expand").data);
   }
 }
